@@ -18,16 +18,14 @@ individual repo's `AGENTS.md`. Keep it tight — it's an index, not docs.
 
 | Surface | URL | What it is | Repo |
 |---|---|---|---|
-| Studio site | https://echoforge.games | Marketing + game portal | <!-- TODO: repo name --> |
-| Arcade | https://arcade.echoforge.games | Hub for 40+ browser games | <!-- TODO --> |
-| EchoQuest | https://play.echoquest.net | Web RPG, procedural dungeons, multiplayer | <!-- TODO --> |
-| One More Night | (Steam) | Zombie survival/stealth | <!-- TODO --> |
-| Last Exit | https://echoforge.games | Choice-driven survival horror, Godot 4 | <!-- TODO --> |
-| Blog | https://blog.echoforge.games | Studio blog | <!-- TODO --> |
-| Ops / leadership | https://leadtodeliver.com | Adjacent leadership content site | <!-- TODO --> |
+| Studio site | https://echoforge.games | Marketing + game portal | `echoforge-games/echoforge-studios` |
+| Arcade | https://arcade.echoforge.games | Hub for 40+ browser games | `echoforge-games/echoforge-arcade` |
+| EchoQuest | https://play.echoquest.net | Web RPG, procedural dungeons, multiplayer | `echoforge-games/adventure-quest` |
+| One More Night | (Steam) | Zombie survival/stealth | `echoforge-games/one-more-night` |
+| Last Exit | https://echoforge.games | Choice-driven survival horror, Godot 4 | `echoforge-games/last-exit` |
+| Blog | https://blog.echoforge.games | Studio blog | `echoforge-games/echoforge-games.github.io` |
+| Ops / leadership | https://leadtodeliver.com | Adjacent leadership content site | `bruno-civongroup/lead-to-deliver` |
 | Org defaults | — | This repo. Org profile + issue templates + this index. | `echoforge-games/.github` |
-
-<!-- TODO: fill in repo names above as repos are linked into the Project. -->
 
 ## Tech stack
 
@@ -46,7 +44,7 @@ individual repo's `AGENTS.md`. Keep it tight — it's an index, not docs.
 ## Issue tracking
 
 All work — across every repo above — tracks in **one** org-level GitHub
-Project: **"EchoForge — All Work"** (<!-- TODO: paste Project URL -->).
+Project: **"EchoForge — All Work"** (https://github.com/orgs/echoforge-games/projects/1).
 
 Every issue must be added to the Project. The org-wide issue templates in
 this repo (`.github/ISSUE_TEMPLATE/`) prompt for the fields below so they
