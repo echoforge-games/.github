@@ -84,6 +84,33 @@ Use **sub-issues** for breakdown (especially for arcade games rolled up
 under an "Arcade — <Game>" epic). Don't create a separate Project per
 game.
 
+## Email & notifications
+
+**Don't add a new provider per surface — consolidate.** Check this table before introducing a new SDK or relay.
+
+### Outbound (app-to-user + ops)
+
+| Use case | Provider | Where configured | From address |
+|---|---|---|---|
+| EQ user emails (verify, password reset, notifications) | SendGrid (API key) | `adventure-quest-accounts-1` + `adventure-quest-server-1` containers on EQ server (`3.208.134.177`); env: `SENDGRID_API_KEY`, `EMAIL_PROVIDER=sendgrid` | `noreply@civongroup.com` |
+| OMN game emails | AWS SES | `omn-server` container; env: `AWS_SES_REGION=us-east-1`, `SES_FROM_EMAIL` | `noreply@wolfguild.com` |
+| Server ops (unattended-upgrades, cron alerts) | msmtp → SendGrid relay | `/etc/msmtprc` on EQ server (root-only). `msmtp` + `msmtp-mta` + `bsd-mailx` installed | `noreply@civongroup.com` |
+| WordPress (Wolfguild) emails | `wp-mail-smtp` plugin | WP server (`54.225.170.153`) | (varies) |
+
+**Active known issue:** SendGrid account is over quota — see `echoforge-games/echoforge-accounts#88`. EQ verification + password-reset emails are silently failing until resolved. Recommended fix: migrate civongroup-sending to AWS SES (would consolidate with OMN; verify `civongroup.com` and `echoquest.net` domains in SES first).
+
+**Adding email to a new surface:** default to **AWS SES** (the direction we're moving toward). Don't add Mailgun/Postmark/Resend without a stated reason. Verify any new sending domain in SES before sending.
+
+### Inbound (read mailbox programmatically)
+
+- **Quick lookups during a Claude session**: Built-in Gmail MCP (`mcp__claude_ai_Gmail__*`) — search/read/draft, no setup.
+- **Full R/W from scripts**: `googleapis` Node SDK. OAuth creds at `C:/Users/bruno/.gmail-mcp/`. Scopes: `gmail.modify` + `gmail.settings.basic`.
+- **Automated triage**: `D:/projects/alert-agent/` — background service polls Gmail, classifies alerts via Haiku 4.5, files GitHub issues, moves processed alerts to "Alerts - Resolved" label.
+
+### Primary ops recipient
+
+`bruno@civongroup.com` (also receives ahrefs, uptimerobot, statuspage notifications).
+
 ## Conventions for Claude (and any other agent)
 
 - **Branches**: `claude/<short-slug>-<id>` (the harness already does this).
