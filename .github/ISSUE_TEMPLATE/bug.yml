@@ -1,0 +1,62 @@
+name: Bug
+description: Something is broken or behaving wrong.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill in fields so this issue lands in the org Project with the right
+        filters. See [org index](https://github.com/echoforge-games/.github/blob/main/AGENTS.md).
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      description: Which thing is broken?
+      options:
+        - Studio Site
+        - Arcade Hub
+        - Arcade Game
+        - EchoQuest
+        - One More Night
+        - Last Exit
+        - Blog
+        - Ops
+        - Shared Infra
+    validations:
+      required: true
+  - type: input
+    id: arcade-game
+    attributes:
+      label: Arcade game (only if Surface = Arcade Game)
+      description: Title of the specific arcade game. Leave blank otherwise.
+      placeholder: e.g. Pixel Dash
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0 — drop everything
+        - P1 — this week
+        - P2 — soon
+        - P3 — eventually
+      default: 2
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you see? What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps. Include browser/device if relevant.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / links
+      description: Related issues, console output, screenshots, etc.

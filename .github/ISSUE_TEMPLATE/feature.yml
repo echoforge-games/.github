@@ -1,0 +1,74 @@
+name: Feature
+description: New functionality or meaningful enhancement.
+title: "[Feature] "
+labels: ["feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill in fields so this issue lands in the org Project with the right
+        filters. See [org index](https://github.com/echoforge-games/.github/blob/main/AGENTS.md).
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - Studio Site
+        - Arcade Hub
+        - Arcade Game
+        - EchoQuest
+        - One More Night
+        - Last Exit
+        - Blog
+        - Ops
+        - Shared Infra
+    validations:
+      required: true
+  - type: input
+    id: arcade-game
+    attributes:
+      label: Arcade game (only if Surface = Arcade Game)
+      placeholder: e.g. Pixel Dash
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Gameplay
+        - Content
+        - Infra
+        - Tooling
+        - Marketing
+        - SEO
+        - Chore
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0
+        - P1
+        - P2
+        - P3
+      default: 2
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: One paragraph. What does this add?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: What problem does it solve? Who's it for?
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      description: How will we know it's shipped?

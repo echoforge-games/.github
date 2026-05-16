@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Org index (read first)
+    url: https://github.com/echoforge-games/.github/blob/main/AGENTS.md
+    about: Map of what we ship, the Project schema, and conventions for every repo.

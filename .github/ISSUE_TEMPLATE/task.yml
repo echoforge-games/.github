@@ -1,0 +1,66 @@
+name: Task
+description: Chore, infra work, content update — anything that isn't a bug or new feature.
+title: "[Task] "
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Fill in fields so this issue lands in the org Project with the right
+        filters. See [org index](https://github.com/echoforge-games/.github/blob/main/AGENTS.md).
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - Studio Site
+        - Arcade Hub
+        - Arcade Game
+        - EchoQuest
+        - One More Night
+        - Last Exit
+        - Blog
+        - Ops
+        - Shared Infra
+    validations:
+      required: true
+  - type: input
+    id: arcade-game
+    attributes:
+      label: Arcade game (only if Surface = Arcade Game)
+      placeholder: e.g. Pixel Dash
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Content
+        - Infra
+        - Tooling
+        - Marketing
+        - SEO
+        - Chore
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - P0
+        - P1
+        - P2
+        - P3
+      default: 2
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What needs doing
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / links
