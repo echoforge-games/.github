@@ -57,7 +57,7 @@ stay populated automatically.
 | Field | Type | Values |
 |---|---|---|
 | `Surface` | Single select | Studio Site / Arcade Hub / Arcade Game / EchoQuest / One More Night / Last Exit / Blog / Ops / Shared Infra |
-| `Arcade Game` | Text | Only set when `Surface = Arcade Game`. The specific title. |
+| `Arcade Game` | Single select | Only set when `Surface = Arcade Game`. The specific title. Single-select (not text) so views can group/filter by it cheaply. Add an option per arcade title as it ships. |
 | `Area` | Single select | Gameplay / Content / Infra / Tooling / Marketing / SEO / Bug / Chore |
 | `Priority` | Single select | P0 / P1 / P2 / P3 |
 | `Status` | Single select (default) | Backlog / Up Next / In Progress / In Review / Blocked / Done |
@@ -83,6 +83,39 @@ stay populated automatically.
 Use **sub-issues** for breakdown (especially for arcade games rolled up
 under an "Arcade — <Game>" epic). Don't create a separate Project per
 game.
+
+### Project performance & UX
+
+GitHub Projects has no user-tunable indices, but a few choices make the
+board feel snappy vs. sluggish. The schema and views above already follow
+these rules — keep them in mind when adding more.
+
+- **Auto-archive `Done` items.** Set a built-in workflow to archive items
+  where `Status = Done` for 30 days. Archived items still exist, but
+  don't load on every view. Without this, the working set creeps and
+  every view gets slower.
+- **Keep active items under ~1000.** Past that, boards visibly lag.
+  Auto-archive plus closing stale `Backlog` items keeps this honest.
+- **Prefer table views for high-cardinality groupings.** Grouping a
+  *board* by `Arcade Game` (40+ columns) is the slowest possible view.
+  The "Arcade games" view is a table for this reason.
+- **Single-select beats text for grouping/filtering.** That's why
+  `Arcade Game` is a single-select even though it grows over time —
+  filters are O(1) on indexed enums vs. text scan.
+- **Cap views at ~7–10.** Each view is its own query. Don't make a
+  per-game view; filter the existing ones.
+- **Scope cross-repo queries.** When a view is for one game, add a
+  repository filter (`repo:echoforge-games/<repo>`) so the Project
+  doesn't fan out to every linked repo.
+- **Avoid deep filter expressions.** Single-field filters are fast;
+  multi-clause `AND/OR` with text matches are slow.
+- **Labels are a fast fallback.** Project filters require loading the
+  Project; label filters work in raw GitHub issue search and are
+  cheap. Mirror critical Project fields as labels (e.g. `surface:arcade`,
+  `area:bug`) so Claude can search across the org without opening the
+  Project.
+- **Don't over-iterate.** Keep at most 4–6 active `Iteration` cycles
+  visible; archive older ones.
 
 ## Conventions for Claude (and any other agent)
 
