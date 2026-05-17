@@ -1,0 +1,84 @@
+name: Inject agent brief
+
+# Appends a type-specific <agent-brief> XML block to a newly opened issue,
+# matched by the type label applied by the issue template (bug / feature /
+# task). Briefs are sourced from echoforge-games/.github/.github/agent-briefs/
+# so they stay consistent across every repo in the org.
+#
+# Triggers:
+#   - issues.opened       : runs against this repo's own issues
+#   - workflow_call       : called by other org repos via a one-line caller workflow
+
+on:
+  issues:
+    types: [opened]
+  workflow_call:
+    inputs:
+      brief-ref:
+        description: Ref of echoforge-games/.github to read briefs from.
+        type: string
+        default: main
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine issue type from labels
+        id: type
+        env:
+          LABELS_JSON: ${{ toJSON(github.event.issue.labels) }}
+        run: |
+          set -euo pipefail
+          type=""
+          for candidate in bug feature task; do
+            if printf '%s' "$LABELS_JSON" | jq -e --arg t "$candidate" 'any(.[]; .name == $t)' >/dev/null; then
+              type="$candidate"
+              break
+            fi
+          done
+          echo "type=$type" >> "$GITHUB_OUTPUT"
+
+      - name: Skip if no recognized type
+        if: steps.type.outputs.type == ''
+        run: echo "No bug/feature/task label — nothing to inject."
+
+      - name: Check out org-defaults for briefs
+        if: steps.type.outputs.type != ''
+        uses: actions/checkout@v4
+        with:
+          repository: echoforge-games/.github
+          ref: ${{ inputs.brief-ref || 'main' }}
+          path: .org-defaults
+
+      - name: Append brief to issue body
+        if: steps.type.outputs.type != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TYPE: ${{ steps.type.outputs.type }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          brief_path=".org-defaults/.github/agent-briefs/${TYPE}.md"
+          [ -f "$brief_path" ] || { echo "Brief not found: $brief_path" >&2; exit 1; }
+
+          body_file=$(mktemp)
+          gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json body --jq .body > "$body_file"
+
+          if grep -q '<agent-brief>' "$body_file"; then
+            echo "Brief already present — skipping."
+            exit 0
+          fi
+
+          new_body=$(mktemp)
+          {
+            cat "$body_file"
+            printf '\n\n---\n\n'
+            cat "$brief_path"
+          } > "$new_body"
+
+          gh issue edit "$ISSUE_NUMBER" --repo "$REPO" --body-file "$new_body"

@@ -84,6 +84,39 @@ Use **sub-issues** for breakdown (especially for arcade games rolled up
 under an "Arcade — <Game>" epic). Don't create a separate Project per
 game.
 
+### Agent briefs (auto-injected into every issue)
+
+Every issue opened via a template gets a type-specific `<agent-brief>`
+XML block appended to its body by the
+[`inject-agent-brief`](.github/workflows/inject-agent-brief.yml) workflow.
+The brief is the authoritative marching orders for any agent (Claude or
+otherwise) that picks up the issue — it specifies triage, process,
+constraints, and deliverables specific to the type.
+
+Briefs live in [`.github/agent-briefs/`](.github/agent-briefs/) — one
+per issue type. Edit them there to change behavior across every repo
+in the org; the next issue opened picks up the change.
+
+**To enable on a new repo** (the workflow only fires in repos that opt
+in), add this one-file caller workflow:
+
+```yaml
+# .github/workflows/inject-agent-brief.yml
+name: Inject agent brief
+on:
+  issues:
+    types: [opened]
+permissions:
+  issues: write
+  contents: read
+jobs:
+  inject:
+    uses: echoforge-games/.github/.github/workflows/inject-agent-brief.yml@main
+```
+
+The repo also needs to use the org-default issue templates (which it
+will, by default, unless it ships its own `.github/ISSUE_TEMPLATE/`).
+
 ### Project performance & UX
 
 GitHub Projects has no user-tunable indices, but a few choices make the
