@@ -2,6 +2,13 @@
 
 <agent-brief>
   <type>bug</type>
+  <context>
+    Before acting, ground yourself:
+    1. Note the Surface, Area, Priority, and (if applicable) Arcade Game values from the form fields above. Don't assume — read them.
+    2. Look up the Surface in the org index for tech stack & host: https://github.com/echoforge-games/.github/blob/main/AGENTS.md#tech-stack
+    3. Read this repo's own AGENTS.md for repo-specific quirks (entry points, build commands, conventions).
+    4. Skim the Project filtered by this Surface for related open work / duplicates (Project URL in the org index "Issue tracking" section).
+  </context>
   <triage>
     1. Confirm Surface, Area, and Priority are set in the Project. If not, propose values and ask.
     2. Search the Project for duplicates by title/keywords. If a match exists, link it and stop.
